@@ -17,31 +17,32 @@ if(isset($_REQUEST['ajax_form']) && $_REQUEST['ajax_form'] == $sidAjax){
 }
 
 ?>
-/*отображаем страницу загрузки на время обработки ajax-запроса,
-выводим отлажанные данные полученые с ajax-запроса*/
+/*задаем пустой блок для отображения данных и блок для процесса загрузки
 <div class="group">
    <div id="block"></div >
    <div id="process">wait ... </div >
 </div>
+
 <script>
-   window.BXDEBUG = true;
+   window.BXDEBUG = true; /*включаем режим отладки для библиотеки BX */
 function DEMOLoad(){
-   BX.hide(BX("block"));
-   BX.show(BX("process"));
+   BX.hide(BX("block")); /*скрываем блок*/ */
+   BX.show(BX("process")); /*показываем элемент загрузки*/
+   /*выполняется ajax-запрос к странице с формой*/
    BX.ajax.loadJSON(
       '<?=$APPLICATION->GetCurPage()?>?ajax_form=<?=$sidAjax?>',
-      DEMOResponse
+      DEMOResponse /*вызывается функция вывода информации в консоль*/
    );
 }
 function DEMOResponse (data){
-   BX.debug('AJAX-DEMOResponse ', data);
-   BX("block").innerHTML = data.RESULT;
-   BX.show(BX("block"));
-   BX.hide(BX("process"));
+   BX.debug('AJAX-DEMOResponse ', data); /*выводим данные с типом дата*/ */
+   BX("block").innerHTML = data.RESULT; /*заполняем блок данными из запроса*/ */
+   BX.show(BX("block")); /*показываем блок с данными*/ */
+   BX.hide(BX("process"));/*скрываем элемент загрузки*/ */
 
-   BX.onCustomEvent(
-      BX(BX("block")),
-      'DEMOUpdate'
+   BX.onCustomEvent( /*генерация пользовательского события*/ */
+      BX(BX("block")),/*получаем ссылку на элемент блока*/ */
+      'DEMOUpdate' /*индентификатор события для элемента с типом block*/ */
    );
 }
 
@@ -51,24 +52,24 @@ BX.ready(function(){
       window.location.href = window.location.href;
    });
    */
-   BX.hide(BX("block"));
-   BX.hide(BX("process"));
-   
-    BX.bindDelegate(
-      document.body, 'click', {className: 'css_ajax' },
-      function(e){
+   BX.hide(BX("block")); /*скрываем элемент "block"*/ */
+   BX.hide(BX("process")); /*скрываем элемент с загрузкой*/ */
+   /*делегируем обработку события на родительский элемент в document.body*/
+    BX.bindDelegate(  */ /*вызываем функцию делегирования события*/ */
+      document.body, 'click', {className: 'css_ajax' }, /*в родительском документе по клику на элемент с классом css_ajax будет запущена функция*/ */
+      function(e){ /*объявляем функцию*/ */
          if(!e)
-            e = window.event;
+            e = window.event; /*обеспечиваем совместимость с браузерами*/ */
          
-         DEMOLoad();
-         return BX.PreventDefault(e);
+         DEMOLoad(); /*вызываем функцию DEMOLoad()*/ */
+         return BX.PreventDefault(e); /*предотвращаем выполнения действия по умолчанию*/ */
       }
    );
    
 });
 
 </script>
-<div class="css_ajax">click Me</div>
+<div class="css_ajax">click Me</div> /*создаем элемент, по клику на который будет вызываться функция DEMOLoad*/ */
 <?
 //подключаем эпилог ядра bitrix
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
